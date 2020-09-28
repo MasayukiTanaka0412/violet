@@ -1,0 +1,7 @@
+# pip install -r requirements.txt
+pandas
+
+# pyinstaller Test.py --onefile
+pyinstaller
+
+pywin32
