@@ -1,9 +1,11 @@
 import logging
 import os
 import win32com.client
+import pandas as pd
 
 logging.basicConfig(level=logging.INFO)
 templateName = "Template.msg"
+recipientsFile = "Recipients.xlsx"
 
 logging.info('Violet App Start')
 
@@ -19,10 +21,25 @@ logging.info("本文: {}".format(mail.HTMLBody))
 
 originalBody = mail.HTMLBody
 
-replacedBody = originalBody.replace("{Recipient Name}","TestName")
+df = pd.read_excel(os.path.join(path,recipientsFile), sheet_name='Recipients')
+logging.info(df)
 
-mail.HTMLBody = replacedBody
+outputDir = os.path.join(path,'output')
+if not os.path.isdir(outputDir):
+    os.mkdir(outputDir)
 
-mail.SaveAs(os.path.join(path,"output.msg"))
+for index, row in df.iterrows():
+    replacedBody = originalBody
+    recipient = ""
+    for indexName in row.index:
+        logging.info("indexName {}".format(indexName))
+        if indexName == "TO":
+            mail.Recipients.Add(row[indexName])
+            recipient =row[indexName]
+        else:
+            replacedBody = replacedBody.replace(indexName,row[indexName])
+    mail.HTMLBody = replacedBody
+    mail.SaveAs(os.path.join(outputDir,"{}.msg".format(recipient.replace("@","_"))))
+    mail.Recipients.Remove(1)
 
 logging.info('Violet App End')

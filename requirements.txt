@@ -5,3 +5,4 @@ pandas
 pyinstaller
 
 pywin32
+xlrd
