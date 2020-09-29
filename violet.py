@@ -3,7 +3,7 @@ import os
 import win32com.client
 
 logging.basicConfig(level=logging.INFO)
-templateName = "年末年始のご挨拶.msg"
+templateName = "Template.msg"
 
 logging.info('Violet App Start')
 
